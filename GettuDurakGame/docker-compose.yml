@@ -1,0 +1,29 @@
+version: '3.8'
+
+services:
+  mongodb:
+    image: mongo:6.0
+    container_name: gettu-durak-db
+    ports:
+      - "27017:27017"
+    volumes:
+      - mongodb_data:/data/db
+    environment:
+      MONGO_INITDB_DATABASE: gettu-durak-game
+
+  backend:
+    build: .
+    container_name: gettu-durak-backend
+    ports:
+      - "3000:3000"
+    depends_on:
+      - mongodb
+    environment:
+      MONGODB_URI: mongodb://mongodb:27017/gettu-durak-game
+      PORT: 3000
+      NODE_ENV: development
+    volumes:
+      - ./server:/app/server
+
+volumes:
+  mongodb_data:
